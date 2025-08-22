@@ -1,8 +1,9 @@
 from flask import Flask,request,jsonify
+from threading import Thread
 import agent
 import requests
 import pprint
-
+import asyncio
 # ask from owner
 HARD_CODED_REPO_ID=1041200993
 HARD_CODED_REPO_OWNER="shresthjindal28"
@@ -20,15 +21,9 @@ def hello():
     print(data["repository"]["id"])
     print(data["ref"])
 
-    if(data["repository"]["owner"]["login"] ==HARD_CODED_REPO_OWNER and data["repository"]["id"] == HARD_CODED_REPO_ID and data["ref"]==HARD_CODED_REPO_DEFAULT_BRANCH):
+    if (data["repository"]["owner"]["login"] ==HARD_CODED_REPO_OWNER and data["repository"]["id"] == HARD_CODED_REPO_ID and data["ref"]==HARD_CODED_REPO_DEFAULT_BRANCH):
         print("\nvalid push\n")
-        # commit_id=data["commits"][0]["id"]
-        # response = requests.get("https://api.github.com/repos/shresthjindal28/Test-repo-/commits/"+commit_id)
-        # # pprint.pprint(response.json())
-        # parsed_data=response.json()
-        # files=parsed_data["files"]
-        # pprint.pprint(files)
-
+        
         all_commits_list=[]
         for item in data["commits"]:
             parsed_response = requests.get("https://api.github.com/repos/shresthjindal28/Test-repo-/commits/"+item["id"]).json()
@@ -47,15 +42,12 @@ def hello():
         print("\n\n*************commmits******************\n")
         pprint.pprint(data_to_send_to_agent)
 
-        # agent.init_agent(data_to_send_to_agent)
-
+        Thread(target=agent.init_agent, args=(all_commits_list,), daemon=True).start()
         return jsonify({"status": "ok"}), 200
 
     else:
         print("\nnot valid push\n")
         return jsonify({"status": "ok"}), 200
-
-
 
 
 if __name__ == "__main__":

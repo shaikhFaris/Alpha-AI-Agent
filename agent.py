@@ -10,7 +10,7 @@ from portia import (
 )
 from tools.find_significance import FindSignificanceTool
 from tools.fetch_text_img import FetchTextAndImgTool
-from tools.fetch_text_img import FetchTextAndImgTool
+from tools.fetch_img import FetchImgTool
 
 
 def init_agent(code):
@@ -27,14 +27,15 @@ def init_agent(code):
         default_log_level="INFO"
     )
     # Instantiate a Portia instance. Load it with the config and with the example tools.
-    portia = Portia(config=google_config, tools=[FindSignificanceTool(),FetchTextAndImgTool()])
+    portia = Portia(config=google_config, tools=[FindSignificanceTool(),FetchTextAndImgTool(),FetchImgTool()])
 
     print("portia planning and running...")
 
+    # if you get error here, then it is most probably in tools
     plan = portia.plan(f"""
 You will a github push made by a user to a particular repo. It will be provides here below:
 {code}
-First get significance of the code changes made in this github push. Then get the code summary and code snippet.
+First get significance of the code changes made in this github push. Then get the code summary and code snippet. Extract the code snippet in text format from the code_snippet get an image from it.
     """)
     print(plan)
     print(plan.pretty_print())
@@ -57,6 +58,20 @@ First get significance of the code changes made in this github push. Then get th
     # print(f"\033[92m{summary}\033[0m")
 
 
-code={'commits': [[{'sha': '01448a8bccaa074900d0b8aca570139d517f6e4d', 'filename': 'hello.c', 'status': 'added', 'additions': 6, 'deletions': 0, 'changes': 6, 'patch': '@@ -0,0 +1,6 @@\n+#include<stdio.h>\n+int main()\n+{\n+  printf("Hello Wrold");\n+  return 0;\n+}'}]]}
+# code={'commits': [[{'sha': '01448a8bccaa074900d0b8aca570139d517f6e4d', 'filename': 'hello.c', 'status': 'added', 'additions': 6, 'deletions': 0, 'changes': 6, 'patch': '@@ -0,0 +1,6 @@\n+#include<stdio.h>\n+int main()\n+{\n+  printf("Hello Wrold");\n+  return 0;\n+}'}]]}
 
-init_agent(code)
+# init_agent({'commits': [[{'additions': 1,
+#                'changes': 2,
+#                'deletions': 1,
+#                'filename': 'complex.c',
+#                'patch': '@@ -1,7 +1,7 @@\n'
+#                         ' #include <stdio.h>\n'
+#                         ' \n'
+#                         ' int mystery(int *arr, int n) {\n'
+#                         '-    if (n/0 == 0) return 0;\n'
+#                         '+    if (n/0 == 0) return 0/12;\n'
+#                         '     return (arr[n - 1] ^ n) + mystery(arr, n - 1);\n'
+#                         ' }\n'
+#                         ' ',
+#                'sha': 'b139413b8ae973bc5ccec61afaae1c43427355d6',
+#                'status': 'modified'}]]})

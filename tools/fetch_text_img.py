@@ -53,29 +53,19 @@ class FetchTextAndImgTool(Tool[str]):
             SystemMessage(content=(
                 "You are a code summariser. "
                 "Check the provided GitHub commit data and generate a very short summary "
-                "and a condensed code snippet of the changes. "
-                "Respond ONLY with valid JSON in this format:\n"
-                "{\n"
-                "  \"code_summary\": \"<short summary>\",\n"
-                "  \"code_snippet\": \"<code snippet>\"\n"
-                "}"
+                "and a valid code snippet of the important changes."
+                "Respond ONLY in this text format NOT json:\n"
+                "  code summary: <short summary>,\n"
+                "  code snippet: <code snippet>\n"
             )),
-            HumanMessage(content=f"Generate the JSON summary for these commits:\n{commits}")
+            HumanMessage(content=f"Generate the summary for these commits:\n{commits}")
         ]
         try:
             ai_msg = llm.invoke(messages)
+            print(ai_msg.content)
+            return f"{ai_msg.content}"
         except Exception as e:
             print("\nError occured in llm significance")
             print(e)
-        
-
-        match = re.search(r'\{[\s\S]*\}', ai_msg.content)
-        if match:
-            # converted to dict
-            data = json.loads(match.group())
-            pprint.pprint(data)
-            return f"{data}"
-        else:
-            print("No valid JSON found:", ai_msg.content)
-            return "error"
+            return f"{e}"
 
