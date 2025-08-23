@@ -1,4 +1,6 @@
 from flask import Flask,request,jsonify
+import os
+from dotenv import load_dotenv
 from threading import Thread
 import json
 import requests
@@ -15,10 +17,17 @@ except Exception as e:
     exit()
 
 queue_name = "alphaQ"
+
 # ask from owner
-HARD_CODED_REPO_ID=1041200993
-HARD_CODED_REPO_OWNER="shresthjindal28"
-HARD_CODED_REPO_DEFAULT_BRANCH="refs/heads/master"
+load_dotenv()
+
+repo_id=os.getenv("HARD_CODED_REPO_ID")
+repo_owner=os.getenv("HARD_CODED_REPO_OWNER")
+repo_default_branch=os.getenv("HARD_CODED_REPO_DEFAULT_BRANCH")
+
+HARD_CODED_REPO_ID= int(repo_id)
+HARD_CODED_REPO_OWNER=repo_owner
+HARD_CODED_REPO_DEFAULT_BRANCH=f"refs/heads/{repo_default_branch}"
 
 app = Flask(__name__)
 
