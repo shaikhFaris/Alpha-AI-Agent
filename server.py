@@ -1,9 +1,20 @@
 from flask import Flask,request,jsonify
 from threading import Thread
-import agent
+import json
 import requests
 import pprint
-import asyncio
+import redis
+
+try:
+    # Connect to Redis
+    print("connecting to redis....")
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    print("connected to redis")
+except Exception as e:
+    print("Could  not connect to redis"+e)
+    exit()
+
+queue_name = "alphaQ"
 # ask from owner
 HARD_CODED_REPO_ID=1041200993
 HARD_CODED_REPO_OWNER="shresthjindal28"
@@ -14,12 +25,10 @@ app = Flask(__name__)
 @app.route("/",methods=["POST"])
 def hello():
     data = request.json
-    # print("🔔 Webhook received:", data)
-    # pprint.pprint(data)
 
-    print(data["repository"]["owner"]["login"])
-    print(data["repository"]["id"])
-    print(data["ref"])
+    # print(data["repository"]["owner"]["login"])
+    # print(data["repository"]["id"])
+    # print(data["ref"])
 
     if (data["repository"]["owner"]["login"] ==HARD_CODED_REPO_OWNER and data["repository"]["id"] == HARD_CODED_REPO_ID and data["ref"]==HARD_CODED_REPO_DEFAULT_BRANCH):
         print("\nvalid push\n")
@@ -42,7 +51,8 @@ def hello():
         print("\n\n*************commmits******************\n")
         pprint.pprint(data_to_send_to_agent)
 
-        Thread(target=agent.init_agent, args=(all_commits_list,), daemon=True).start()
+        r.lpush(queue_name, json.dumps(data_to_send_to_agent))
+        # Thread(target=agent.init_agent, args=(all_commits_list,), daemon=True).start()
         return jsonify({"status": "ok"}), 200
 
     else:
@@ -52,11 +62,3 @@ def hello():
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=3000, debug=True)
-
-# url = 'https://github.com/shresthjindal28/Test-repo-/compare/2c932c6c8d77...5e45b1d639e4'
-
-# 'https://api.github.com/repos/shresthjindal28/Test-repo-/compare/718b82f970a8...0a1930f3e3ad'
-# response = requests.get(url)
-# print(response)
-# pprint.pprint(response.content)
-# print(response.json())

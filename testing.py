@@ -1,6 +1,6 @@
-import json
+# import json
 # from pydantic import BaseModel, Field, ValidationError
-import pprint
+# import pprint
 # class ChangesInAFile(BaseModel):
 #     additions: int = Field(..., description="Number of lines added")
 #     changes: int = Field(..., description="Number of changes")
@@ -40,30 +40,30 @@ import pprint
 # print(data['summary'])
 # print(type((data['summary'])))
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# # import logging
+# # logging.basicConfig(level=logging.DEBUG)
 
-import os
-from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
-import dotenv
+# # import os
+# # from slack_sdk import WebClient
+# # from slack_sdk.errors import SlackApiError
+# # import dotenv
 
-dotenv.load_dotenv()
-slack_token = os.getenv("SLACK_BOT_TOKEN")
-client = WebClient(token=slack_token)
+# # dotenv.load_dotenv()
+# # slack_token = os.getenv("SLACK_BOT_TOKEN")
+# # client = WebClient(token=slack_token)
 
-try:
-    # response = client.chat_postMessage(
-    #     channel="C09C3LPNNC9",
-    #     text="Hello from your app! :tada:"
-    # )
-    response = client.files_upload_v2(
-    file="temp_img.png",
-    text="Here",
-    title="Test upload",
-    channel="C09C3LPNNC9",
-    initial_comment="Here is the latest version of the file!",
-    )
-except SlackApiError as e:
-    # You will get a SlackApiError if "ok" is False
-    assert e.response["error"]    # str like 'invalid_auth', 'channel_not_found'
+# # try:
+# #     # response = client.chat_postMessage(
+# #     #     channel="C09C3LPNNC9",
+# #     #     text="Hello from your app! :tada:"
+# #     # )
+# #     response = client.files_upload_v2(
+# #     file="temp_img.png",
+# #     text="Here",
+# #     title="Test upload",
+# #     channel="C09C3LPNNC9",
+# #     initial_comment="Here is the latest version of the file!",
+# #     )
+# # except SlackApiError as e:
+# #     # You will get a SlackApiError if "ok" is False
+# #     assert e.response["error"]    # str like 'invalid_auth', 'channel_not_found'
