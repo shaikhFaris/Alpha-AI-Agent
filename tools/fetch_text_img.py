@@ -11,17 +11,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import SystemMessage, HumanMessage
 
 
-# class ChangesInAFile(BaseModel):
-#     additions: int = Field(..., description="Number of lines added")
-#     changes: int = Field(..., description="Number of changes")
-#     deletions: int = Field(..., description="Number of lines deleted")
-#     filename: str = Field(..., description="Name of the changed file")
-#     patch: str = Field(..., description="Patch text which shows the changes")
-#     sha: str = Field(..., description="Commit SHA for the file")
-#     status: str = Field(..., description="File status (added, removed, modified, etc.)")
-    
-
-    # imp
 class FetchTextAndImgSchema(BaseModel):
     commits:str = Field(..., description="The commits which will be used to generate code summary and code snippet.")
  
@@ -52,8 +41,8 @@ class FetchTextAndImgTool(Tool[str]):
         messages = [
             SystemMessage(content=(
                 "You are a code summariser. "
-                "Check the provided GitHub commit data and generate a very short summary "
-                "and a valid code snippet of the important changes."
+                "Check the provided GitHub push data and create a very short summary of the code changes."
+                "and then you have to create a VERY CONCISE code snippet which represents the code changes."
                 "Respond ONLY in this text format NOT json:\n"
                 "  code summary: <short summary>,\n"
                 "  code snippet: <code snippet>\n"

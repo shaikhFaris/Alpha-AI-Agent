@@ -20,7 +20,7 @@ class FetchImgSchema(BaseModel):
 class FetchImgTool(Tool[str]):
     id : str = "0003"
     name:str="Fetch Code SNippet Image"
-    description: str = "Gets code snippet image from a backend."
+    description: str = "Gets code snippet image from a backend and stores in the root directory."
     # imp
     args_schema: type[BaseModel] = FetchImgSchema
     # imp

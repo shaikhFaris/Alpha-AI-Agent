@@ -46,8 +46,7 @@ class FindSignificanceTool(Tool[str]):
         )
 
         messages = [
-            SystemMessage(content="You are a code significance analyser which will rate the" \
-            " code changes in a github push based on how much significance does this push make." \
+            SystemMessage(content="You are a code significance analyser which will rate the ONLY BASED ON THE CODE CHANGES IN THE PUSH NOT THE PREEXISTING CODE. ONLY CHANGES MADE IN PUSH"
             " There are 3 levels of significance - High Significance refers to  highly impactful code  which could potentially disrupt the code if the code has  system errors and if it crashes at  Runtime  and performance critical , medium Significance refers to the code which affects the functionality but not like high significance and low Significance means which does affect the functionality of the code or just the basic code like -comment,formatting changes ,repetitive code and minor ui change  ."),
             HumanMessage(content=f'Is this change significant\n{commits}. Give very short and to the point answer.')
         ]

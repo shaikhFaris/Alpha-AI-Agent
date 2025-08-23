@@ -23,19 +23,47 @@ import pprint
 #     print("Error in validation")
 #     print(e)
 
-data= {
-    'value': (
-        '{"content":"Low Significance","additional_kwargs":{},"response_metadata":{'
-        '"prompt_feedback":{"block_reason":0,"safety_ratings":[]},"finish_reason":"STOP",'
-        '"model_name":"gemini-2.0-flash","safety_ratings":[]},"type":"ai","name":null,'
-        '"id":"run--f78d2e27-b2e3-4c13-9d6c-0e4c1a598b4a-0","example":false,"tool_calls":[],'
-        '"invalid_tool_calls":[],"usage_metadata":{"input_tokens":183,"output_tokens":3,'
-        '"total_tokens":186,"input_token_details":{"cache_read":0}}}'
-    ),
-    'summary': (
-        'The code change, adding a "hello.c" file with a basic "Hello World" program, '
-        'is determined to have low significance.'
-    ),
-}
-print(data['summary'])
-print(type((data['summary'])))
+# data= {
+#     'value': (
+#         '{"content":"Low Significance","additional_kwargs":{},"response_metadata":{'
+#         '"prompt_feedback":{"block_reason":0,"safety_ratings":[]},"finish_reason":"STOP",'
+#         '"model_name":"gemini-2.0-flash","safety_ratings":[]},"type":"ai","name":null,'
+#         '"id":"run--f78d2e27-b2e3-4c13-9d6c-0e4c1a598b4a-0","example":false,"tool_calls":[],'
+#         '"invalid_tool_calls":[],"usage_metadata":{"input_tokens":183,"output_tokens":3,'
+#         '"total_tokens":186,"input_token_details":{"cache_read":0}}}'
+#     ),
+#     'summary': (
+#         'The code change, adding a "hello.c" file with a basic "Hello World" program, '
+#         'is determined to have low significance.'
+#     ),
+# }
+# print(data['summary'])
+# print(type((data['summary'])))
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+import os
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+import dotenv
+
+dotenv.load_dotenv()
+slack_token = os.getenv("SLACK_BOT_TOKEN")
+client = WebClient(token=slack_token)
+
+try:
+    # response = client.chat_postMessage(
+    #     channel="C09C3LPNNC9",
+    #     text="Hello from your app! :tada:"
+    # )
+    response = client.files_upload_v2(
+    file="temp_img.png",
+    text="Here",
+    title="Test upload",
+    channel="C09C3LPNNC9",
+    initial_comment="Here is the latest version of the file!",
+    )
+except SlackApiError as e:
+    # You will get a SlackApiError if "ok" is False
+    assert e.response["error"]    # str like 'invalid_auth', 'channel_not_found'
