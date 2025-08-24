@@ -15,7 +15,7 @@ except Exception as e:
 print("waiting for tasks...")
 i=0
 while i<3:
-    raw_task = r.brpop(queue_name, timeout=3)  # blocks until a task arrives or timeout
+    raw_task = r.brpop(queue_name, timeout=10)  # blocks until a task arrives or timeout
     if raw_task:
         queue, task_json = raw_task
         task = json.loads(task_json)
