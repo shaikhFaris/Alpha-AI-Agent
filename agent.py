@@ -19,16 +19,23 @@ def init_agent(code):
 
     load_dotenv()
     GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
     # Create a default Portia config with LLM provider set to Google GenAI and model set to Gemini 2.0 Flash
-    google_config = Config.from_default(
-        llm_provider=LLMProvider.GOOGLE,
-        default_model="google/gemini-2.5-flash-lite",
-        google_api_key=GOOGLE_API_KEY,
+    # google_config = Config.from_default(
+    #     llm_provider=LLMProvider.GOOGLE,
+    #     default_model="google/gemini-2.0-flash",
+    #     google_api_key=GOOGLE_API_KEY,
+    #     default_log_level="INFO"
+    # )
+    openai_config = Config.from_default(
+        llm_provider=LLMProvider.OPENAI,
+        default_model="openai/gpt-5",
+        google_api_key=OPENAI_API_KEY,
         default_log_level="INFO"
     )
     # Instantiate a Portia instance. Load it with the config and with the example tools.
-    portia = Portia(config=google_config, tools=[FindSignificanceTool(),FetchTextAndImgTool(),FetchImgTool(),SlackTool()])
+    portia = Portia(config=openai_config, tools=[FindSignificanceTool(),FetchTextAndImgTool(),FetchImgTool(),SlackTool()])
 
     print("portia planning and running...")
 

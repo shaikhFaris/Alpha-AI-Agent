@@ -52,7 +52,7 @@ class FindSignificanceTool(Tool[str]):
         ]
         try:
             ai_msg = llm.invoke(messages)
-            return ai_msg.content
+            return f"significance tool returns: {ai_msg.content}"
         except Exception as e:
             print("\nError occured in llm significance")
             print(e)
